@@ -259,11 +259,10 @@ version = "0.9.1"
 dependencies = ["akku-r7rs", "chez-srfi", "chibi-assert", "chibi-optional", "chibi-test"]
 dev-dependencies = []
 license = "bsd-3-clause"
-url = "http://snow-fort.org/s/gmail.com/alexshinn/chibi/math/linalg/0.2/chibi-math-linalg-0.2.tgz"
-sha256 = "6f16be86b1d55af62776be7c1c1e6f8751e730d1cc6ce12ab6467abe02bacccd"
+url = "http://snow-fort.org/s/gmail.com/alexshinn/chibi/math/linalg/0.3/chibi-math-linalg-0.3.tgz"
+sha256 = "55783898d0668465f3a7adf3102580dc4ad144b3845935539387b2db858994b0"
 source = "snow-fort"
-synopsis = "Linear algebra and extended array routines"
-version = "0.2.0"
+version = "0.3.0"
 
 [chibi-math-prime]
 dependencies = ["akku-r7rs", "chez-srfi", "chibi-test"]
@@ -2647,6 +2646,16 @@ source = "akku"
 synopsis = "CRC, HMAC, MD5, SHA-1, SHA-2, xxHash"
 version = "1.3.0"
 
+[http-pixiu]
+dependencies = ["chibi-uri", "ufo-socket", "ufo-threaded-function", "ufo-coroutines", "chez-srfi"]
+dev-dependencies = []
+license = "mit"
+url = "https://archive.akkuscm.org/archive/pkg/h/http-pixiu_1.0.2_repack.tar.xz"
+sha256 = "bcfda888b5bb88f83e066f765711c8dc7623e4c9bf56e7212bee72bd8646b960"
+source = "akku"
+synopsis = "A http server based on scheme"
+version = "1.0.2"
+
 [ijputils]
 dependencies = ["wak-foof-loop", "chez-srfi", "spells", "pfds"]
 dev-dependencies = []
@@ -3031,11 +3040,11 @@ version = "1.0.6-akku.0"
 dependencies = ["ufo-thread-pool", "ufo-threaded-function", "uuid", "chibi-pathname", "ufo-match", "arew-json", "slib-string-search", "chez-srfi"]
 dev-dependencies = []
 license = "mit"
-url = "https://archive.akkuscm.org/archive/pkg/s/scheme-langserver_1.2.0_repack.tar.xz"
-sha256 = "5f6f155d38e70e0845c8d5b952564aa9306469a21dd03ec6d7fce453d7159405"
+url = "https://archive.akkuscm.org/archive/pkg/s/scheme-langserver_1.2.1_repack.tar.xz"
+sha256 = "2fe6450ff9907d1b32b9fa18b9b5799e5083fc0bf498a342788e8d5959f4372a"
 source = "akku"
 synopsis = "This package is a language server protocol implementation helping scheme programming."
-version = "1.2.0"
+version = "1.2.1"
 
 [scheme-specs]
 dependencies = ["chez-srfi"]
@@ -3155,6 +3164,16 @@ url = "https://archive.akkuscm.org/archive/pkg/u/ufo-match_1.0.0_repack.tar.xz"
 sha256 = "3200ebeb66a1b030ba244ee048c1ed7c6a256d6f091129a362ef1af53de16383"
 source = "akku"
 synopsis = "This package is a dependable match macro library for chez scheme."
+version = "1.0.0"
+
+[ufo-socket]
+dependencies = ["chez-srfi"]
+dev-dependencies = []
+license = "mit"
+url = "https://archive.akkuscm.org/archive/pkg/u/ufo-socket_1.0.0_repack.tar.xz"
+sha256 = "4086f72cf355cd207e140be1db14aa29ca5ae1822ac8c9f4472cd071ab902014"
+source = "akku"
+synopsis = "I did not edit Akku.manifest"
 version = "1.0.0"
 
 [ufo-thread-pool]

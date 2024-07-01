@@ -28,14 +28,26 @@ in
     # build, filter out guile warnings
     akku install 2>&1 | grep -v "\(guile-user\)" - | cat
 
+    # make sure akku metadata is present during testing and onwards
+    echo $PWD $CHEZSCHEMELIBDIRS \
+    | sed "s/:/ /g" \
+    | xargs find \
+    | grep "metadata.sls" \
+    | xargs ${parse-akku} merge ${baseName} ${version} > temp___
+    mv temp___ .akku/lib/akku/metadata.sls
+
     runHook postBuild
   '';
   checkPhase = ''
     IS_R7RS=false
     runHook preCheck
 
-    t=$CHEZSCHEMELIBDIRS
+
+    propagated_chez=$CHEZSCHEMELIBDIRS
+    propagated_chibi=$CHIBI_MODULE_PATH
+
     export CHEZSCHEMELIBDIRS="$PWD/.akku/lib:$CHEZSCHEMELIBDIRS"
+    export CHIBI_MODULE_PATH="$PWD/.akku/lib:$CHIBI_MODULE_PATH"
 
     # Run all test .sps files if they exist
     # and run tests for libs mirrored from snow-fort.
@@ -55,7 +67,8 @@ in
 
     runHook postCheck
 
-    export CHEZSCHEMELIBDIRS=$t
+    export CHEZSCHEMELIBDIRS=$propagated_chez
+    export CHIBI_MODULE_PATH=$propagated_chibi
   '';
   doCheck = true;
   installPhase = ''
@@ -64,14 +77,6 @@ in
     mkdir -p $out/lib
 
     cd .akku
-
-    # this may or may not be useful
-    echo $PWD $CHEZSCHEMELIBDIRS \
-    | sed "s/:/ /g" \
-    | xargs find \
-    | grep "metadata.sls" \
-    | xargs ${parse-akku} merge ${baseName} ${version} > temp___
-    mv temp___ lib/akku/metadata.sls
 
     rm -f bin/activate*
 

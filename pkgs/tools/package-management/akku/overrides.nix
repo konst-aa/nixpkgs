@@ -1,7 +1,16 @@
-{ stdenv, pkgs, lib, akkuPackages }:
+{ stdenv, pkgs, lib, akku, akkuPackages, curl, git, substituteAll }:
 let
+  joinOverrides =
+    overrides: pkg: old:
+      lib.attrsets.mergeAttrsList (map (o: o pkg old) overrides);
+  addToBuildInputs =
+    extras: pkg: old:
+      { propagatedBuildInputs = old.propagatedBuildInputs ++ extras; };
   broken = lib.addMetaAttrs { broken = true; };
   skipTests = pkg: old: { doCheck = false; };
+  # debugging
+  showLibs = pkg: old: { preCheck = "echo $CHEZSCHEMELIBDIRS"; };
+  runTests = pkgs: old: { doCheck = true; };
 in
 {
   chez-srfi = pkg: old: {
@@ -13,7 +22,7 @@ in
       lazy.sps
       '
     '';
-    # doCheck = false; # for development bc rebuilds take forever
+    doCheck = false; # for development bc rebuilds take forever
   };
   akku-r7rs = pkg: old: {
     preBuild = ''
@@ -21,6 +30,17 @@ in
       rm -rf tests
     '';
   };
+
+  akku = joinOverrides [
+    (addToBuildInputs [ curl git ])
+    (pkg: old: {
+      # hardcode-libcurl
+      patches = akku.patches;
+    })
+  ];
+
+  # circular dependency on wak-trc-testing !?
+  wak-foof-loop = skipTests;
 
   scheme-langserver = pkg: old: {
     preInstall = ''
@@ -35,7 +55,6 @@ in
 
   # broken tests
   xitomatl = skipTests;
-  # chibi-optional = skipTests;
   ufo-threaded-function = skipTests;
 
   # unsupported schemes, it seems.
