@@ -15,6 +15,64 @@ lib.makeScope newScope (self: {
     bootstrap-chicken = self.chicken.override { bootstrap-chicken = null; };
   };
 
+  akkuEggs = let
+    small-compat = self.eggDerivation {
+      name = "small-compat";
+      src = fetchFromGitHub {
+        owner = "konst-aa";
+        repo = "small-compat";
+        rev = "c8a45eecd2e3c09cc12e35427cd7779b707900d5";
+        hash = "sha256-PtWIJmJ//F1jvdbpWNGfPL39wn9Oh2UJdigIewHgnhw=";
+      };
+      buildInputs = with self.chickenEggs; [
+        r7rs
+      ];
+  };
+  snow2egg_ = writeShellApplication {
+    name = "snow2egg";
+    runtimeInputs = [ self.chicken self.chickenEggs.srfi-1 ];
+    text = "csi -s ${./snow2egg.scm} \"$@\"";
+  };
+  snow2egg = "${snow2egg_}/bin/snow2egg";
+  in
+  lib.recurseIntoAttrs ({ inherit small-compat; } // (lib.makeScope self.newScope (eggself:
+  (lib.mapAttrs (pname_: akkuPackage:
+  self.eggDerivation rec {
+    inherit (akkuPackage) version src;
+    checkPhase = ''
+      csi -s tests/run.scm
+    '';
+    doCheck = false;
+    name = "${akkuPackage.pname}-${version}";
+    buildInputs =
+      [
+        self.chickenEggs.srfi-1
+        self.chickenEggs.r7rs    # compat
+        self.chickenEggs.srfi-64 # test suite
+        small-compat
+        # eggself.chibi-test
+    ];
+    preBuild = ''
+      mkdir -p tests
+      cat package.scm | ${snow2egg} > ${akkuPackage.pname}.egg
+      rm package.scm
+      for f in $(find . -type f -name '*.scm')
+      do
+        mv $f smth___
+        echo '(import-for-syntax (r7rs))' > $f
+        cat smth___ >> $f
+      done
+      rm -f smth___
+      cat ${akkuPackage.pname}.egg
+    '';
+  })
+  (lib.attrsets.filterAttrs
+    (_: a: (if lib.attrsets.isDerivation a then a.r7rs else false))
+    akkuPackages)
+  )
+
+  )));
+
   chickenEggs = lib.recurseIntoAttrs (lib.makeScope self.newScope (eggself:
     (lib.mapAttrs
       (pname:
