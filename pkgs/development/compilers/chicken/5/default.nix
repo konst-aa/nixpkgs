@@ -1,4 +1,4 @@
-{ lib, newScope, fetchurl }:
+{ lib, newScope, fetchurl, fetchFromGitHub, writeShellApplication, akkuPackages }:
 
 lib.makeScope newScope (self: {
 
