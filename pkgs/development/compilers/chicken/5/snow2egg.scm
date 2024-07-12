@@ -19,6 +19,7 @@
   ;; reaches
   ;; ((authors "john doe" ...) ...)
   ;;            ^^^^
+  (write (ref key alist) (current-error-port))
   (anif ((ref key alist) := t)
         (cadr t)))
 
@@ -54,6 +55,11 @@
                    t)))
         (list)))
 
+(define (ver->semver ver)
+  (string-intersperse
+    (take (string-split (string-append ver ".0.0.0") ".")
+          3)
+    "."))
 
 ;; Rename test script for chicken if it exists
 (anif ((pref 'test #f) := t)
@@ -63,10 +69,7 @@
   `((author ,(pref 'authors "UNKNOWN AUTHOR"))
     (synopsis ,(pref 'description "NO SYNOPSIS"))
     ;; Packages like chibi-optional violate semantic versioning
-    (version ,(string-intersperse
-                (take (string-split (pref 'version "NO VERSION") ".")
-                      3)
-                "."))
+    (version ,(ver->semver (pref 'version "0.0.0")))
     (license ,(symbol->string (pref 'license 'NO-LICENSE)))
     (category uncategorized) ; placeholder
     (dependencies r7rs ;,@cond-expanded-deps ,@(lref 'depends)
