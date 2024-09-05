@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitLab, autoreconfHook, pkg-config, guile, curl, substituteAll }:
+{ lib, stdenv, fetchFromGitLab, autoreconfHook, pkg-config, guile, curl }:
 stdenv.mkDerivation rec {
   pname = "akku";
   version = "1.1.0-unstable-2024-03-03";
