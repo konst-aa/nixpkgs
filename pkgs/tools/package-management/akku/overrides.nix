@@ -41,8 +41,14 @@ in
   akku = joinOverrides [
     (addToBuildInputs [ curl git ])
     (pkg: old: {
-      # hardcode-libcurl
-      patches = akku.patches;
+      # hardcode-libcurl, needed for v1.1.0 release which is in repos.
+      patches = [
+        # substitute libcurl path
+        (substituteAll {
+          src = ./hardcode-libcurl.patch;
+          libcurl = "${curl.out}/lib/libcurl${stdenv.hostPlatform.extensions.sharedLibrary}";
+        })
+      ];
     })
   ];
 
