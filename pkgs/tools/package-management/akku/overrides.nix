@@ -51,11 +51,10 @@ in
     # uses chez
     (addToBuildInputs [ curl git ])
     (pkg: old: {
-      # bump akku to 1.1.0-unstable-2024-03-03
+      version = "1.1.0-unstable-2024-03-03";
       src = akku.src;
+      unpackPhase = "";
     })
-    # not a tar archive
-    (pkg: old: removeAttrs old [ "unpackPhase" ])
   ];
 
   # circular dependency on wak-trc-testing !?
