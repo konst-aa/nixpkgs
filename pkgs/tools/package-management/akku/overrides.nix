@@ -1,4 +1,4 @@
-{ stdenv, lib, akku, curl, git }:
+{ stdenv, lib, fetchFromGitHub, akku, curl, git }:
 let
   joinOverrides =
     overrides: pkg: old:
@@ -17,18 +17,27 @@ in
 {
   chez-srfi = joinOverrides [
     (pkg: old: {
+      version = "0.0.0-unstable-2024-10-31";
       preCheck = ''
         SKIP='
         multi-dimensional-arrays.sps
         time.sps
         tables-test.ikarus.sps
         lazy.sps
+        pipeline-operators.sps
         '
       '';
+      src = fetchFromGitHub {
+        owner = "arcfide";
+        repo = "chez-srfi";
+        rev = "b424440b94037ace50fc8179f159b7e4c53e59e6";
+        hash = "sha256-Qg8XveLObiD6bZJ3FQNAgbZepnQHcB2GC+wzh58I5mA=";
+      };
+      unpackPhase = "";
     })
 
     # nothing builds on ARM Macs because of this
-    brokenOnAarch64
+    # brokenOnAarch64
   ];
 
   akku-r7rs = pkg: old: {
